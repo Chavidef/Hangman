@@ -1,0 +1,22 @@
+.btn-group-sm .btn-secondary{
+    color:aqua;
+    margin: 3px;
+}
+
+.letterBlank {
+    pointer-events: none;
+    width: 60px;
+    padding: 350px 5px 5px;
+    margin: 8px;
+    border: none;
+    border-bottom: 8px solid darkgrey;
+    text-align: center;
+    color: white;
+}
+
+.showLetter {
+    font-size: 40px;
+    font-weight: bold;
+    text-shadow: 0 0 5px aqua;
+    color: black;
+}
