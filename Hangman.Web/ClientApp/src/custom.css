@@ -6,12 +6,13 @@
 .letterBlank {
     pointer-events: none;
     width: 60px;
-    padding: 350px 5px 5px;
+    padding: 0px 5px 5px;
     margin: 8px;
     border: none;
     border-bottom: 8px solid darkgrey;
     text-align: center;
     color: white;
+    position:relative;
 }
 
 .showLetter {
@@ -19,4 +20,22 @@
     font-weight: bold;
     text-shadow: 0 0 5px aqua;
     color: black;
+}
+#myCanvas {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 70%;
+    right: 0;
+    margin: auto;
+    width: 500px;
+    height: 500px;
+}
+.btn-group-sm{
+    position: relative;
+    right:10%;
+}
+.letterBlankDiv{
+    position:relative;
+    right: 10%;
 }

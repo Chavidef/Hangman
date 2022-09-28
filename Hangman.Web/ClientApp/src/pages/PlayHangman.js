@@ -16,6 +16,8 @@ const PlayHangman = () => {
     let correctGuesses = 0;
     let incorrectGuesses = 0;
 
+    
+
     useEffect(() => {
 
         const getWord = async () => {
@@ -23,7 +25,29 @@ const PlayHangman = () => {
 
             setWord(data);
         }
+        const drawGallows = async () => {
+            const c = document.getElementById("myCanvas");
+            const ctx = c.getContext("2d");
+            ctx.lineWidth = 3;
 
+            ctx.moveTo(150, 0); //piece to hang from
+            ctx.lineTo(150, 30);
+            ctx.stroke();
+
+            ctx.moveTo(150, 0);//top
+            ctx.lineTo(300, 0);
+            ctx.stroke();
+
+            ctx.moveTo(300, 0);//right
+            ctx.lineTo(300, 300);
+            ctx.stroke();
+
+            ctx.moveTo(270, 0);//right reinforcement
+            ctx.lineTo(300, 30);
+            ctx.stroke();
+        }
+
+        drawGallows();
         getWord();
 
     }, [])
@@ -31,9 +55,10 @@ const PlayHangman = () => {
 
 
 
-    let letterExistsCount = 0;
 
     const onSubmitClick = async (e) => {
+        let letterExistsCount = 0;
+
         e.currentTarget.disabled = true; //disable button after clicked
 
         chosenLetter = e.target.innerText;
@@ -44,35 +69,103 @@ const PlayHangman = () => {
             }
         }
         letterExists = letterExistsCount > 0;
+        console.log(letterExists);
 
         if (letterExists) {
-            correctGuess();
+            let chosenElements = 0;
+            for (let i = 1; i <= letterExistsCount; i++) {
+                const elements = document.getElementsByClassName("letterBlank");
+                const elementsArr = [...elements];
+
+                chosenElements = elementsArr.filter(el => el.value === chosenLetter);
+                chosenElements.forEach(element => element.classList.add("showLetter"));
+            }
+            correctGuesses += chosenElements.length;
+            console.log(correctGuesses);
         }
         else {
-            incorrectGuesses++;
-            console.log("incorrect")
+            incorrectGuesses = incorrectGuesses + 1;
             console.log(incorrectGuesses);
+
+            getBodyPart();
         }
     }
 
-    const correctGuess = async () => {
-        await correctGuesses++;
-        for (let i = 1; i <= letterExistsCount; i++) {
-            const elements = document.getElementsByClassName("letterBlank");
-            const elementsArr = [...elements];
-
-            const chosenElements = elementsArr.filter(el => el.value === chosenLetter);
-            correctGuesses += chosenElements.length;
-            chosenElements.forEach(element => element.classList.add("showLetter"));
+    const getBodyPart = () => {
+        if (incorrectGuesses === 1) {
+            drawHead();
         }
-        console.log("correct")
-        console.log(correctGuesses);
+        else if (incorrectGuesses === 2) {
+            drawBody();
+        }
+        else if (incorrectGuesses === 3) {
+            drawRightFoot();
+        }
+        else if (incorrectGuesses === 4) {
+            drawLeftFoot();
+        }
+        else if (incorrectGuesses === 5) {
+            drawRightHand();
+        }
+        else if (incorrectGuesses === 6) {
+            drawLeftHand();
+            //gameOver();
+        }
     }
 
+    const drawHead = async () => {
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.beginPath();
+        ctx.arc(150, 60, 30, 0, 2 * Math.PI);
+        ctx.strokeStyle = "#a9a9a9";
+        ctx.stroke();
+    }
+
+    const drawBody = async () => {
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.moveTo(150, 90);
+        ctx.lineTo(150, 200);
+        ctx.strokeStyle = "#a9a9a9";
+        ctx.stroke();
+    }
+    const drawRightFoot = async () => {
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.moveTo(150, 200);
+        ctx.lineTo(200, 270);
+        ctx.strokeStyle = "#a9a9a9";
+        ctx.stroke();
+    }
+    const drawLeftFoot = async () => {
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.moveTo(150, 200);
+        ctx.lineTo(100, 270);
+        ctx.strokeStyle = "#a9a9a9";
+        ctx.stroke();
+    }
+    const drawRightHand = async () => {
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.moveTo(150, 130);
+        ctx.lineTo(220, 80);
+        ctx.strokeStyle = "#a9a9a9";
+        ctx.stroke();
+    }
+    const drawLeftHand = async () => {
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.moveTo(150, 130);
+        ctx.lineTo(80, 80);
+        ctx.strokeStyle = "#a9a9a9";
+        ctx.stroke();
+    }
+    
     return (
         <>
-            <h6>word: {word}</h6>
-            <div className='container mt-1'>
+            <div className='mt-1'>
                 <div className='row'>
                     <div class="btn-group-sm" role="group">
                         <button className="btn btn-secondary" value="A" onClick={onSubmitClick} >A</button>
@@ -103,7 +196,10 @@ const PlayHangman = () => {
                         <button className="btn btn-secondary" value="Z" onClick={onSubmitClick} >Z</button>
                     </div>
                 </div>
-                <div className='row mt-30'>
+                <canvas id="myCanvas" width="300" height="300">
+                    Your browser does not support this.
+                </canvas>
+                <div className='row mt-30 letterBlankDiv'>
                     {wordArr && wordArr.map(l =>
                         <input type='text' className='letterBlank' value={l} id={l} />
 
@@ -112,5 +208,7 @@ const PlayHangman = () => {
             </div>
         </>
     )
+
+   
 }
 export default PlayHangman;
